@@ -4,6 +4,7 @@
 function init()
 	_G.dump = dump -- 打印数据 带堆栈 （要打印的参数，标题，层级
 	_G.copy = copy -- 深复制
+	_G.clone = clone -- 深复制，如果是原表会将原表格式也复制过去
 	_G.GetDay = GetDay -- 获取当天的数值
 	_G.GetWeek = GetWeek -- 获取本周的数值
 	_G.IsSameWeek = IsSameWeek --两个时刻是否同一周
@@ -58,6 +59,21 @@ function copy(tb)
 		end
 	end
 	return out
+end
+
+function clone(t)
+	if not t or type(t) ~= "table" then return t end
+	local result = {}
+
+	local m = getmetatable(t)
+	if m then
+		setmetatable(result, getmetatable(t))
+	end
+
+	for k, v in pairs(t) do
+		result[k] = table.clone(v, withmeta)
+	end
+	return result
 end
 
 local function copyr(tb)
