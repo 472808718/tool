@@ -23,8 +23,6 @@ function init()
 	_G.TblStr = TblStr -- 表转字符串
 	_G.GetTblKey = GetTblKey -- 获取表内的key，抛弃参数
 	_G.GetTblValue = GetTblValue -- 获取表内的参数，抛弃key
-	_G.ColorHead = ColorHead
-	_G.ShuShuBuild = ShuShuBuild ---------数数通用-----构造函数=====
 	_G.GetStringCharCount = GetStringCharCount -- 获取字符串长度，文字只算1位
 	_G.CreateRandomGenerator = CreateRandomGenerator -- 创建一个新的随机数生成器
 	_G.MinMax = MinMax -- 返回参数限制在大小内
@@ -428,16 +426,6 @@ function TblStr(str)
 	return loadstring(s)()
 end
 
-function ColorHead(content, color)
-	if content == nil then
-		return ""
-	end
-	color = color or '#ff0000'
-	local str = '<span style="color:%s">%s</span>'
-	local rs = string.format(str,color,tostring(content))
-	return rs
-end
-
 -- 获取字符串长度，文字只算1位
 function GetStringCharCount(str)
 	local length = 0
@@ -497,56 +485,5 @@ function GetOsTime(t)
 	local y, m, d, h, min, s = string.match(t, "(%d+)-(%d+)-(%d+) (%d+):(%d+):(%d+)")
     return os.time({year=y, month=m, day=d, hour=h, min=min, sec=s})
 end
-
----------数数通用-----构造函数=====
--- local data = ShuShuBuild("limit_time_event", HUODONG_ID, "抽奖", HUODONG_NAME, {{18, 1},}, {{18, 1}},{{"激活",123},})
--- local data = ShuShuBuild("limit_time_event", 活动Id, 操作, 活动名, 扣除物品, 获得物品,其他参数})
--- log_file_bus.Track(userId, "limited_time_event", data)
-
-function ShuShuBuild(eventName, ...)
-	local args = {...}
-	local data = {}
-	if eventName == "limit_time_event" then
-		local event_cost = {}
-		if args[4] then
-			for _,data in pairs(args[4]) do
-				table.insert(event_cost, {
-					item = data[1],
-					num = data[2],
-				})
-			end
-		end
-		local event_change = {}
-		if args[5] then
-			for _,data in pairs(args[5]) do
-				table.insert(event_change, {
-					item = data[1],
-					num = data[2],
-					event = data[3],
-				})
-			end
-		end
-		local other_event = {}
-		if args[6] then
-			for _,data in pairs(args[6]) do
-				table.insert(other_event, {
-					type = data[1],
-					value = data[2],
-				})
-			end
-		end
-		data = {
-			event_id = args[1],
-			event_type = args[2],
-			event_name = args[3],
-			event_cost = next(event_cost) and event_cost,
-			event_change = next(event_change) and event_change,
-			other_event = next(other_event) and other_event,
-		}
-	end
-	assert(next(data))
-	return data
-end
------------END--------------------
 
 init()
