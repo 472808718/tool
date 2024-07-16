@@ -61,6 +61,7 @@ function copy(tb)
 	return out
 end
 
+-- 连原表都一起复制
 function clone(t)
 	if not t or type(t) ~= "table" then return t end
 	local result = {}
@@ -71,7 +72,7 @@ function clone(t)
 	end
 
 	for k, v in pairs(t) do
-		result[k] = table.clone(v, withmeta)
+		result[k] = clone(v, withmeta)
 	end
 	return result
 end
